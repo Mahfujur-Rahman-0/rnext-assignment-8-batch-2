@@ -8,7 +8,9 @@ import { usePathname } from "next/navigation";
 export default function NavChecker() {
 	const router = usePathname();
 	const isMovieRoute = router.includes("/movie");
-	const [similar, setSimilar] = useState([]);
+
+	const [similar, setSimilar] = useState();
+
 	const [value, setValue] = useState("");
 
 	useEffect(() => {
@@ -45,7 +47,7 @@ export default function NavChecker() {
 	return (
 		<>
 			{!isMovieRoute ? (
-				<NavBar setValue={setValue} value={value} similar={similar.results} />
+				<NavBar setValue={setValue} value={value} similar={similar?.results} />
 			) : (
 				<DETnav />
 			)}

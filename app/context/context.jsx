@@ -10,6 +10,7 @@ export function ContextProvider({ children }) {
 		{ id: 0 + "MovieCard", card: "" },
 	]);
 	const [cardId, setCardId] = useState(0);
+	const [searchres, setSearchRes] = useState([]);
 
 	const [watchLaterList, setWatchLaterList] = useState([
 		{ id: 0 + "watchLaterList" },
@@ -25,6 +26,8 @@ export function ContextProvider({ children }) {
 				setWatchLaterList,
 				cardId,
 				setCardId,
+				searchres,
+				setSearchRes,
 			}}
 		>
 			{children}
