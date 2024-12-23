@@ -8,7 +8,7 @@ export default function TopRated() {
 	useEffect(() => {
 		const fetchMovies = async () => {
 			try {
-				const response = await fetch("http://localhost:3000/api/TopRated");
+				const response = await fetch("/api/TopRated");
 				if (response.ok) {
 					const data = await response.json();
 					setTopRated(data.results || []);

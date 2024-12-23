@@ -8,9 +8,7 @@ export default function TrendingNow() {
 	useEffect(() => {
 		const fetchMovies = async () => {
 			try {
-				const response = await fetch(
-					"http://localhost:3000/api/TrendingNowApi"
-				);
+				const response = await fetch("/api/TrendingNowApi");
 				if (response.ok) {
 					const data = await response.json();
 					setMovies(data.results || []);
