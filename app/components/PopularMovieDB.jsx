@@ -8,9 +8,7 @@ export default function PopularMovieDB() {
 	useEffect(() => {
 		const fetchMovies = async () => {
 			try {
-				const response = await fetch(
-					"http://localhost:3000/api/PopularMovieDB"
-				);
+				const response = await fetch("/api/PopularMovieDB");
 				if (response.ok) {
 					const data = await response.json();
 					setPopularMovies(data.results || []);
