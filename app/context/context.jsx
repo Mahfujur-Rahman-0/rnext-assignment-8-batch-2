@@ -6,7 +6,11 @@ const myContext = createContext();
 
 export function ContextProvider({ children }) {
 	const [showModal, setShowModal] = useState(false);
-	const [selectCard, setSelectCard] = useState([{ id: 0 + "MovieCard" }]);
+	const [selectCard, setSelectCard] = useState([
+		{ id: 0 + "MovieCard", card: "" },
+	]);
+	const [cardId, setCardId] = useState(0);
+
 	const [watchLaterList, setWatchLaterList] = useState([
 		{ id: 0 + "watchLaterList" },
 	]);
@@ -19,6 +23,8 @@ export function ContextProvider({ children }) {
 				setSelectCard,
 				watchLaterList,
 				setWatchLaterList,
+				cardId,
+				setCardId,
 			}}
 		>
 			{children}

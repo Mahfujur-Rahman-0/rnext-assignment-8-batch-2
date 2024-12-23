@@ -1,9 +1,46 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import UseContextApi from "../context/context";
+import Image from "next/image";
 
 export default function MovieSearch() {
-	const { showModal, setShowModal } = UseContextApi();
+	const { showModal, setShowModal, setSelectCard, cardId } = UseContextApi();
+
+	const [similar, setSimilar] = useState([]);
+	const [value, setValue] = useState("");
+
+	useEffect(() => {
+		const controller = new AbortController();
+
+		const signal = controller.signal;
+
+		const fetchMovies = async () => {
+			try {
+				const response = await fetch(`/api/Search?query=${value}`, {
+					signal,
+				});
+
+				if (response.ok) {
+					const data = await response.json();
+
+					setSimilar(data || []);
+				} else {
+					throw new Error("Failed to fetch movies");
+				}
+			} catch (err) {
+				if (err.name !== "AbortError") {
+					console.log(err.message);
+				}
+			}
+		};
+
+		fetchMovies();
+		return () => {
+			controller.abort();
+		};
+	}, [value]);
+
 	return (
 		<>
 			{/* <!-- Movie Search Modal --> */}
@@ -27,11 +64,44 @@ export default function MovieSearch() {
 						</button>
 					</div>
 					<input
+						value={value}
+						onChange={(e) => setValue(e.target.value)}
 						type="text"
 						placeholder="Type movie name..."
 						className="w-full bg-zinc-800 text-white px-4 py-2 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-red-600"
 					/>
-					<div className="max-h-96 overflow-y-auto"></div>
+					<div class="max-h-96 overflow-y-auto">
+						{similar?.results?.map((movie) => (
+							<div
+								onClick={() => {
+									setSelectCard((prevItems) =>
+										prevItems.map((item) =>
+											item.id == cardId ? { ...item, card: movie } : item
+										)
+									);
+
+									setShowModal(!showModal);
+									setValue("");
+								}}
+								key={movie.id}
+								class="flex items-center gap-4 p-2 hover:bg-zinc-800 cursor-pointer rounded"
+							>
+								<Image
+									width={64}
+									height={96}
+									placeholder="blur"
+									blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkAAIAAAoAAv/lxKUAAAAASUVORK5CYII="
+									src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+									alt={movie.title}
+									class="w-16 h-24 object-cover rounded"
+								/>
+								<div>
+									<h3 class="font-bold">{movie.title}</h3>
+									<p class="text-sm text-gray-400">{movie.release_date}</p>
+								</div>
+							</div>
+						))}
+					</div>
 				</div>
 			</div>
 		</>

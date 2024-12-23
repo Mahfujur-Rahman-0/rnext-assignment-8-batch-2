@@ -9,6 +9,7 @@ export default function Compare() {
 	const removeMovieCard = (id) => {
 		setSelectCard(selectCard.filter((card) => card.id !== id));
 	};
+	console.log(selectCard);
 	return (
 		<div className="min-h-screen">
 			{/* <!-- Main Content --> */}
@@ -32,9 +33,13 @@ export default function Compare() {
 
 				{/* <!-- Movie Comparison Container --> */}
 				<div className="grid gap-6 md:grid-cols-2">
-					{/* {selectCard?.map((card) => card.SelectMovie)} */}
-					{selectCard.map(({ id }) => (
-						<SelectMovie key={id} removeMovieCard={() => removeMovieCard(id)} />
+					{selectCard.map(({ id, card }) => (
+						<SelectMovie
+							card={card == undefined ? null : card}
+							key={id}
+							id={id}
+							removeMovieCard={() => removeMovieCard(id)}
+						/>
 					))}
 				</div>
 			</main>

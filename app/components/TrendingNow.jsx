@@ -1,14 +1,19 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function TrendingNow() {
 	const [movies, setMovies] = useState([]);
 	const [loading, setLoading] = useState(true);
 	useEffect(() => {
+		const controller = new AbortController();
+
+		const signal = controller.signal;
+
 		const fetchMovies = async () => {
 			try {
-				const response = await fetch("/api/TrendingNowApi");
+				const response = await fetch("/api/TrendingNowApi", { signal });
 				if (response.ok) {
 					const data = await response.json();
 					setMovies(data.results || []);
@@ -16,27 +21,29 @@ export default function TrendingNow() {
 					throw new Error("Failed to fetch movies");
 				}
 			} catch (err) {
-				setError(err.message);
+				if (err.name !== "AbortError") {
+					console.log(err.message);
+				}
 			} finally {
 				setLoading(false);
 			}
 		};
 
 		fetchMovies();
+
+		return () => {
+			controller.abort();
+		};
 	}, []);
-	if (loading) {
-		return (
-			<div className="w-[60px] h-[50px] ">
+
+	return (
+		<section className="mb-8">
+			<h2 className="text-2xl font-bold mb-4">Trending Now</h2>
+			<div className={`w-[60px] h-[50px] ${loading ? "block" : "hidden"}`}>
 				<div className="loadingtext">
 					<p>Loading</p>
 				</div>
 			</div>
-		);
-	}
-	console.log(movies);
-	return (
-		<section className="mb-8">
-			<h2 className="text-2xl font-bold mb-4">Trending Now</h2>
 			<div
 				id="trendingMovies"
 				className="flex px-2 space-x-4 overflow-x-auto pb-4"
@@ -46,7 +53,7 @@ export default function TrendingNow() {
 						key={movie.id}
 						className="flex-shrink-0 w-48 cursor-pointer hover:scale-105 transition-transform"
 					>
-						<a href="/">
+						<Link href={`/movie/${movie.id}`}>
 							<Image
 								width={192}
 								height={288}
@@ -67,7 +74,7 @@ export default function TrendingNow() {
 										: movie.first_air_date}
 								</p>
 							</div>
-						</a>
+						</Link>
 					</div>
 				))}
 			</div>

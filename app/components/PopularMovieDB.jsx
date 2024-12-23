@@ -1,14 +1,17 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function PopularMovieDB() {
 	const [popularMovies, setPopularMovies] = useState([]);
 	const [loading, setLoading] = useState(true);
 	useEffect(() => {
+		const controller = new AbortController();
+		const signal = controller.signal;
 		const fetchMovies = async () => {
 			try {
-				const response = await fetch("/api/PopularMovieDB");
+				const response = await fetch("/api/PopularMovieDB", { signal });
 				if (response.ok) {
 					const data = await response.json();
 					setPopularMovies(data.results || []);
@@ -16,33 +19,35 @@ export default function PopularMovieDB() {
 					throw new Error("Failed to fetch movies");
 				}
 			} catch (err) {
-				setError(err.message);
+				if (err.name !== "AbortError") {
+					console.log(err.message);
+				}
 			} finally {
 				setLoading(false);
 			}
 		};
 
 		fetchMovies();
+		return () => {
+			controller.abort();
+		};
 	}, []);
-	if (loading) {
-		return (
-			<div className="w-[60px] h-[50px] ">
+
+	return (
+		<section className="mb-8">
+			<h2 className="text-2xl font-bold mb-4">Popular on MOVIE DB</h2>
+			<div className={`w-[60px] h-[50px] ${loading ? "block" : "hidden"}`}>
 				<div className="loadingtext">
 					<p>Loading</p>
 				</div>
 			</div>
-		);
-	}
-	return (
-		<section className="mb-8">
-			<h2 className="text-2xl font-bold mb-4">Popular on MOVIE DB</h2>
 			<div id="popularMovies" className="flex space-x-4 overflow-x-auto pb-4">
 				{popularMovies?.map((movie) => (
 					<div
 						key={movie.id}
 						className="flex-shrink-0 w-48 cursor-pointer hover:scale-105 transition-transform"
 					>
-						<a href="/details.html">
+						<Link href={`/movie/${movie.id}`}>
 							<Image
 								width={192}
 								height={288}
@@ -50,7 +55,7 @@ export default function PopularMovieDB() {
 								alt="Venom: The Last Dance"
 								className="w-full rounded-lg"
 							/>
-						</a>
+						</Link>
 					</div>
 				))}
 			</div>
