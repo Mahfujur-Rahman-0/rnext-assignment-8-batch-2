@@ -4,7 +4,6 @@ import UseContextApi from "../context/context";
 import Image from "next/image";
 
 export default function SelectMovie({ removeMovieCard, id, card }) {
-	console.log(card, "jeem");
 	const { showModal, setShowModal, setCardId } = UseContextApi();
 
 	const [TopRated, setTopRated] = useState([]);
@@ -38,8 +37,8 @@ export default function SelectMovie({ removeMovieCard, id, card }) {
 		return () => {
 			controller.abort();
 		};
-	}, []);
-	console.log(TopRated, "ttttt");
+	}, [card?.id]);
+
 	return (
 		<div className="bg-zinc-900 rounded-lg p-4 flex flex-col min-h-[400px]">
 			<div className="flex justify-end mb-4">
@@ -73,7 +72,9 @@ export default function SelectMovie({ removeMovieCard, id, card }) {
 							alt="Snowden"
 							className="w-full rounded-lg mb-4 object-contain max-h-full"
 						/>
-						<h2 className="text-xl font-bold mb-2 text-center">Snowden</h2>
+						<h2 className="text-xl font-bold mb-2 text-center">
+							{TopRated.title}
+						</h2>
 					</div>
 					<div className="w-full space-y-4 col-span-3">
 						<div className="bg-zinc-800 p-3 rounded">
@@ -90,31 +91,27 @@ export default function SelectMovie({ removeMovieCard, id, card }) {
 						</div>
 						<div className="bg-zinc-800 p-3 rounded">
 							<span className="text-gray-400">Runtime:</span>
-							<span className="float-right">134 min</span>
+							<span className="float-right">{TopRated?.runtime} min</span>
 						</div>
 						<div className="bg-zinc-800 p-3 rounded">
 							<span className="text-gray-400">Budget:</span>
-							<span className="float-right">$40.0M</span>
+							<span className="float-right">${TopRated?.budget}M</span>
 						</div>
 						<div className="bg-zinc-800 p-3 rounded">
 							<span className="text-gray-400">Revenue:</span>
-							<span className="float-right">$37.4M</span>
+							<span className="float-right">${TopRated?.revenue}M</span>
 						</div>
 						<div className="bg-zinc-800 p-3 rounded">
 							<span className="text-gray-400">Genres:</span>
 							<div className="mt-2 flex flex-wrap gap-2">
-								<span className="bg-zinc-700 px-2 py-1 rounded-full text-sm">
-									Drama{" "}
-								</span>
-								<span className="bg-zinc-700 px-2 py-1 rounded-full text-sm">
-									History{" "}
-								</span>
-								<span className="bg-zinc-700 px-2 py-1 rounded-full text-sm">
-									Crime{" "}
-								</span>
-								<span className="bg-zinc-700 px-2 py-1 rounded-full text-sm">
-									Thriller
-								</span>
+								{TopRated?.genres?.map((genre) => (
+									<span
+										key={genre.id}
+										className="bg-zinc-700 px-2 py-1 rounded-full text-sm"
+									>
+										{genre.name}
+									</span>
+								))}
 							</div>
 						</div>
 					</div>

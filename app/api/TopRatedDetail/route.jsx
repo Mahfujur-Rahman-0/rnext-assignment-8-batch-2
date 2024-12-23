@@ -20,7 +20,7 @@ export async function GET(req) {
 	const { searchParams } = new URL(req.url);
 
 	const id = searchParams.get("id");
-
+	console.log(id);
 	try {
 		const data = await FatchingData(id);
 
@@ -28,9 +28,6 @@ export async function GET(req) {
 			status: 200,
 			headers: { "Content-Type": "application/json" },
 		});
-
-		//const responseData = await FinalData.json();
-		// console.log(responseData);
 
 		return FinalData;
 	} catch (error) {

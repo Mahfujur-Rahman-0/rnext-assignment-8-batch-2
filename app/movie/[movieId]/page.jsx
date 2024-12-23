@@ -45,7 +45,7 @@ export default function MovieId() {
 			controller.abort();
 		};
 	}, [movieId]);
-	console.log(TopRated);
+
 	return (
 		<>
 			{/* <!-- Movie Details Section --> */}

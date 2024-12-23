@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -49,7 +50,7 @@ export default function Similar() {
 						key={movie.id}
 						className="flex-shrink-0 w-48 cursor-pointer hover:scale-105 transition-transform"
 					>
-						<a href="details.html">
+						<Link href={`/movie/${movie.id}`}>
 							<Image
 								width={192}
 								height={288}
@@ -57,7 +58,7 @@ export default function Similar() {
 								alt={movie.title}
 								className="w-full rounded-lg"
 							/>
-						</a>
+						</Link>
 					</div>
 				))}
 			</div>

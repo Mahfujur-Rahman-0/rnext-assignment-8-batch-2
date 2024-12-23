@@ -9,7 +9,7 @@ export default function Compare() {
 	const removeMovieCard = (id) => {
 		setSelectCard(selectCard.filter((card) => card.id !== id));
 	};
-	console.log(selectCard);
+
 	return (
 		<div className="min-h-screen">
 			{/* <!-- Main Content --> */}
